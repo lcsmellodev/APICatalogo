@@ -12,14 +12,15 @@ namespace APICatalogo.Controllers
     {
         private readonly AppDbContext _context;
 
+        public CategoriasController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet("produtos")]
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
             return _context.Categorias.Include(p => p.Produtos).ToList();
-        }
-        public CategoriasController(AppDbContext context)
-        {
-            _context = context;
         }
 
         [HttpGet]
@@ -28,7 +29,8 @@ namespace APICatalogo.Controllers
             return _context.Categorias.ToList();
         }
 
-        [HttpGet("{id:int}", Name ="ObterCategoria")]
+        //min(1) é uma maneira de restringir  os valores aceitos como parâmetro (aceita no mínimo 1)
+        [HttpGet("{id:int:min(1)}", Name ="ObterCategoria")]
         public ActionResult<Categoria> Get(int id) 
         {
             Categoria categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
