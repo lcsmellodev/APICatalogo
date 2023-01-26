@@ -17,30 +17,42 @@ namespace APICatalogo.Controllers
             _context = context;
         }
 
+        //[HttpGet]
+        //public ActionResult<IEnumerable<Produto>> Get()
+        //{
+        //    List<Produto> produtos = _context.Produtos.ToList();
+        //    if (produtos is null)
+        //    {
+        //        return NotFound("Produtos não encontrados");
+        //    }
+        //    return produtos;
+
+        //}
+
+        //transformando um método em assíncrono
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public async Task<ActionResult<IEnumerable<Produto>>> Get2()
         {
-            List<Produto> produtos = _context.Produtos.ToList();
-            if (produtos is null)
-            {
-                return NotFound("Produtos não encontrados");
-            }
-            return produtos;
+            return await _context.Produtos.AsNoTracking().ToListAsync();
+            //O await indica que vamos aguardar esse processamento e enquanto isso os recursos utilizados para processar essa requisição pode ser usados para processar outras.
+            //até a operação terminar
 
         }
         //[Route("id")]
         //[HttpGet()] 
         [HttpGet("{id:int}", Name = "ObterProduto")]
-        public ActionResult<Produto> Get(int id)
+        public async Task<ActionResult<Produto>> Get(int id)
         {
-            Produto produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+            Produto produto = await _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoId == id);
                 if(produto is null)
                 {
                     return NotFound("Produto não encontrado");
                 }
-                return produto;
+                return  produto;
             
         }
+
+
         [HttpPost]
         public ActionResult Post(Produto produto) 
         {
